@@ -175,6 +175,7 @@ class AdminPrinController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
             'project_id' => 'required|exists:projects,id', // Validar que el proyecto existe
         ]);
@@ -183,7 +184,7 @@ class AdminPrinController extends Controller
         $administrator = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'role_id' => 2,
         ]);
 
@@ -220,6 +221,7 @@ class AdminPrinController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
             'project_id' => 'required|exists:projects,id', // Validar que el proyecto existe
         ]);
@@ -229,7 +231,7 @@ class AdminPrinController extends Controller
 
         // Solo actualizar contraseña si se proporciona una nueva
         if ($request->filled('password')) {
-            $administrator->password = Hash::make($request->password);
+            $administrator->password = $request->password;
         }
 
         $administrator->save();
@@ -284,6 +286,7 @@ class AdminPrinController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
             'courses' => 'array',
             'courses.*' => 'exists:courses,id',
@@ -303,7 +306,7 @@ class AdminPrinController extends Controller
             $user = User::create([
                 'name' => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password), // Hash de la contraseña
+                'password' => $request->password, // Hash de la contraseña
                 'role_id' => 3,
                 'student_id' => $student->id, // Asignar el student_id aquí
             ]);
@@ -351,6 +354,7 @@ class AdminPrinController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
             'courses' => 'array',
             'courses.*' => 'exists:courses,id',
@@ -367,7 +371,7 @@ class AdminPrinController extends Controller
 
         // Actualizar contraseña solo si se proporciona una nueva
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password); // Hash de la nueva contraseña
+            $user->password = $request->password; // Hash de la nueva contraseña
         }
 
         $user->save();

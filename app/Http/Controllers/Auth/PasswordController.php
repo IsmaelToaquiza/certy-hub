@@ -27,6 +27,7 @@ class PasswordController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
         ]);
 

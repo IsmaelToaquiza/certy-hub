@@ -42,6 +42,7 @@ class RegisteredUserController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
             'role_id' => ['required', 'integer', 'in:2,3'], // Correcto: role_id
         ]);
@@ -49,7 +50,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'role_id' => $request->role_id, // Correcto: role_id
         ]);
 

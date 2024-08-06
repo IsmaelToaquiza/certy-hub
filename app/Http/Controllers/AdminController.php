@@ -36,13 +36,14 @@ class AdminController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => $request->password,
             'role_id' => 1, // Asignar el rol de administrador
         ]);
 
@@ -82,7 +83,7 @@ class AdminController extends Controller
 
         $data = $request->only('name', 'email');
         if ($request->filled('password')) {
-            $data['password'] = bcrypt($request->password);
+            $data['password'] = $request->password;
         }
 
         $administrator->update($data);

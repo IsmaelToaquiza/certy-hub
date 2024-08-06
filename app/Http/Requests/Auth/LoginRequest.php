@@ -5,9 +5,12 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class LoginRequest extends FormRequest
 {
@@ -28,15 +31,15 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => [
-                'required', 'string',
-                // 'email:rfc,dns',
-                'max:255', 'regex:/^[\w.+\-]+@[a-zA-Z\d\-.]+\.[a-zA-Z]{2,}$/'
+                'required',
+                'string',
+                'max:255'
             ],
             'password' => [
                 'required',
                 'string',
-                'min:8', // Mínimo de 12 caracteres
-                'max:64', // Máximo de 64 caracteres
+                'min:8',
+                'max:64',
             ],
         ];
     }
@@ -50,14 +53,25 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Buscar el usuario por correo electrónico
+        $user = User::where('email', $this->input('email'))->first();
+
+        // Verificar si el usuario existe
+        if (!$user || !Hash::check($this->input('password'), $user->password)) {
             RateLimiter::hit($this->throttleKey());
+
+            // Registra un mensaje de advertencia para facilitar la depuración
+            Log::warning('Fallo de autenticación', ['email' => $this->input('email')]);
 
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
+        // Si la autenticación es exitosa, registra el usuario
+        Auth::login($user, $this->boolean('remember'));
+
+        // Limpia el limitador de tasa para este intento
         RateLimiter::clear($this->throttleKey());
     }
 

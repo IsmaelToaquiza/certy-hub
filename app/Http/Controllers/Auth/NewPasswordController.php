@@ -42,6 +42,7 @@ class NewPasswordController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
         ]);
 
@@ -52,7 +53,7 @@ class NewPasswordController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
                 $user->forceFill([
-                    'password' => Hash::make($request->password),
+                    'password' => $request->password,
                     'remember_token' => Str::random(60),
                 ])->save();
 

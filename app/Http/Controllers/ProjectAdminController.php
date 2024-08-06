@@ -82,7 +82,7 @@ class ProjectAdminController extends Controller
             $user = User::create([
                 'name' => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => $request->password,
                 'role_id' => 3,
                 'student_id' => $student->id,
             ]);
@@ -128,6 +128,7 @@ class ProjectAdminController extends Controller
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
                 'confirmed', // Confirmación
+                'not_in:12345678,password,qwerty,abc123,letmein', // Evitar contraseñas comunes
             ],
             'courses' => 'array',
             'courses.*' => 'exists:courses,id',
@@ -142,7 +143,7 @@ class ProjectAdminController extends Controller
         $user->name = $request->first_name . ' ' . $request->last_name;
         $user->email = $request->email;
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            $user->password = $request->password;
         }
         $user->save();
 
