@@ -32,7 +32,17 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Mínimo de 12 caracteres
+                'max:64', // Máximo de 64 caracteres
+                'regex:/[a-z]/', // Al menos una letra minúscula
+                'regex:/[A-Z]/', // Al menos una letra mayúscula
+                'regex:/[0-9]/', // Al menos un número
+                'regex:/[@$!%*?&#]/', // Al menos un carácter especial
+                'confirmed', // Confirmación
+            ],
             'role_id' => ['required', 'integer', 'in:2,3'], // Correcto: role_id
         ]);
 

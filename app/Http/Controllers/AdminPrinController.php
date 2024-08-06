@@ -165,7 +165,17 @@ class AdminPrinController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Mínimo de 12 caracteres
+                'max:64', // Máximo de 64 caracteres
+                'regex:/[a-z]/', // Al menos una letra minúscula
+                'regex:/[A-Z]/', // Al menos una letra mayúscula
+                'regex:/[0-9]/', // Al menos un número
+                'regex:/[@$!%*?&#]/', // Al menos un carácter especial
+                'confirmed', // Confirmación
+            ],
             'project_id' => 'required|exists:projects,id', // Validar que el proyecto existe
         ]);
 
@@ -200,7 +210,17 @@ class AdminPrinController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $administrator->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Mínimo de 12 caracteres
+                'max:64', // Máximo de 64 caracteres
+                'regex:/[a-z]/', // Al menos una letra minúscula
+                'regex:/[A-Z]/', // Al menos una letra mayúscula
+                'regex:/[0-9]/', // Al menos un número
+                'regex:/[@$!%*?&#]/', // Al menos un carácter especial
+                'confirmed', // Confirmación
+            ],
             'project_id' => 'required|exists:projects,id', // Validar que el proyecto existe
         ]);
 
@@ -254,7 +274,17 @@ class AdminPrinController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Mínimo de 12 caracteres
+                'max:64', // Máximo de 64 caracteres
+                'regex:/[a-z]/', // Al menos una letra minúscula
+                'regex:/[A-Z]/', // Al menos una letra mayúscula
+                'regex:/[0-9]/', // Al menos un número
+                'regex:/[@$!%*?&#]/', // Al menos un carácter especial
+                'confirmed', // Confirmación
+            ],
             'courses' => 'array',
             'courses.*' => 'exists:courses,id',
         ]);
@@ -311,7 +341,17 @@ class AdminPrinController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Mínimo de 12 caracteres
+                'max:64', // Máximo de 64 caracteres
+                'regex:/[a-z]/', // Al menos una letra minúscula
+                'regex:/[A-Z]/', // Al menos una letra mayúscula
+                'regex:/[0-9]/', // Al menos un número
+                'regex:/[@$!%*?&#]/', // Al menos un carácter especial
+                'confirmed', // Confirmación
+            ],
             'courses' => 'array',
             'courses.*' => 'exists:courses,id',
         ]);
@@ -416,5 +456,4 @@ class AdminPrinController extends Controller
 
         return redirect()->route('admin.cursos.index')->with('success', 'Curso eliminado exitosamente.');
     }
-
 }

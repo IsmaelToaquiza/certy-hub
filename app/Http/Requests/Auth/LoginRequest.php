@@ -28,7 +28,17 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'regex:/^[\w.+\-]+@[a-zA-Z\d\-.]+\.[a-zA-Z]{2,}$/'],
-            'password' => ['required', 'string', 'min:8', 'max:255', 'regex:/^[\w.@+-]+$/'],
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Mínimo de 12 caracteres
+                'max:64', // Máximo de 64 caracteres
+                'regex:/[a-z]/', // Al menos una letra minúscula
+                'regex:/[A-Z]/', // Al menos una letra mayúscula
+                'regex:/[0-9]/', // Al menos un número
+                'regex:/[@$!%*?&#]/', // Al menos un carácter especial
+                'confirmed', // Confirmación
+            ],
         ];
     }
 
