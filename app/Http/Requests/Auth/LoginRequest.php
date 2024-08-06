@@ -37,7 +37,6 @@ class LoginRequest extends FormRequest
                 'regex:/[A-Z]/', // Al menos una letra mayúscula
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[@$!%*?&#]/', // Al menos un carácter especial
-                'confirmed', // Confirmación
             ],
         ];
     }
